@@ -1,3 +1,4 @@
+
 class StudentsController < ApplicationController
   def new
     @student = Student.new
@@ -21,7 +22,13 @@ class StudentsController < ApplicationController
   end
 
   def index
-    @students = Student.all
+    if !params[:query].empty?
+        search = params[:query].split.first.upcase
+        @students = Student.where("name LIKE ?", "%#{search}%")
+    else
+        @students = Student.all
+        render 'index'
+    end
   end
 
   def student_params
